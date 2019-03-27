@@ -1,6 +1,6 @@
 {
-  "name": "Restrict Uploads to Trust Level",
+  "name": "Restrict Uploads",
   "component": true,
-  "about_url": "URL",
+  "about_url": "https://meta.discourse.org/t/restrict-uploads/112688",
   "license_url": "https://github.com/tshenry/discourse-restrict-uploads/blob/master/LICENSE"
 }
