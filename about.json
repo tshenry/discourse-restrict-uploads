@@ -1,0 +1,6 @@
+{
+  "name": "Restrict Uploads to Trust Level",
+  "component": true,
+  "about_url": "URL",
+  "license_url": "https://github.com/tshenry/discourse-restrict-uploads/blob/master/LICENSE"
+}

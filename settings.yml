@@ -1,0 +1,10 @@
+restrict_to_trust_level:
+  type: enum
+  default: 0
+  choices:
+    - 1
+    - 2
+    - 3
+    - 4
+  description: 
+    en: 'Uploads will be limited to users at this trust level or higher. Staff are immune.'
