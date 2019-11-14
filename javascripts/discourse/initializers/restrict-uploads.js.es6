@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { authorizesOneOrMoreExtensions } from "discourse/lib/utilities";
+import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default {
@@ -18,7 +18,10 @@ export default {
       api.modifyClass("controller:composer", {
         @discourseComputed
         allowUpload() {
-          if (canUpload && authorizesOneOrMoreExtensions()) {
+          if (
+            canUpload &&
+            authorizesOneOrMoreExtensions(this.currentUser.staff)
+          ) {
             return true;
           }
         }
