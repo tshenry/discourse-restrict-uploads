@@ -18,12 +18,7 @@ export default {
       api.modifyClass("controller:composer", {
         @discourseComputed
         allowUpload() {
-          if (
-            canUpload &&
-            authorizesOneOrMoreExtensions(this.currentUser.staff)
-          ) {
-            return true;
-          }
+          return this._super() && canUpload;
         }
       });
 
