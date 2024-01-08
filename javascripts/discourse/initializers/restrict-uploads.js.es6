@@ -2,8 +2,10 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import discourseComputed from "discourse-common/utils/decorators";
 
+const PLUGIN_ID = "discourse-restrict-uploads";
+
 export default {
-  name: "restrict-uploads",
+  name: PLUGIN_ID,
   initialize() {
     withPluginApi("0.8", api => {
       let currentUser = api.getCurrentUser();
@@ -16,6 +18,8 @@ export default {
       }
 
       api.modifyClass("controller:composer", {
+        pluginId: PLUGIN_ID,
+
         @discourseComputed
         allowUpload() {
           return this._super() && canUpload;
@@ -23,6 +27,8 @@ export default {
       });
 
       api.modifyClass("component:composer-editor", {
+        pluginId: PLUGIN_ID,
+
         _bindUploadTarget() {
           if (canUpload) {
             this._super();
