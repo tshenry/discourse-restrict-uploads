@@ -1,13 +1,13 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 const PLUGIN_ID = "discourse-restrict-uploads";
 
 export default {
   name: PLUGIN_ID,
   initialize() {
-    withPluginApi("0.8", api => {
+    withPluginApi((api) => {
       let currentUser = api.getCurrentUser();
       let canUpload;
 
@@ -23,7 +23,7 @@ export default {
         @discourseComputed
         allowUpload() {
           return this._super() && canUpload;
-        }
+        },
       });
 
       api.modifyClass("component:composer-editor", {
@@ -39,10 +39,10 @@ export default {
           if (canUpload) {
             return this._super();
           } else {
-            return "composer.reply_placeholder_no_images";
+            return I18n.t("composer.reply_placeholder_no_images");
           }
-        }
+        },
       });
     });
-  }
+  },
 };
