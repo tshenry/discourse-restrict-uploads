@@ -1,16 +1,16 @@
 import { apiInitializer } from "discourse/lib/api";
 import discourseComputed from "discourse/lib/decorators";
-import { i18n } from "discourse-i18n";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
   const minTrust = settings.restrict_to_trust_level;
 
-  let canUpload = false;
+  const canUpload = currentUser?.trust_level >= minTrust || currentUser?.staff;
 
-  if (currentUser?.trust_level >= minTrust || currentUser?.staff) {
-    canUpload = true;
-  }
+  const noImagePlaceholders = new Set([
+    "composer.reply_placeholder_rte",
+    "composer.reply_placeholder",
+  ]);
 
   api.modifyClass(
     "service:composer",
@@ -23,25 +23,12 @@ export default apiInitializer((api) => {
       }
   );
 
-  api.modifyClass(
-    "component:composer-editor",
-    (SuperClass) =>
-      class extends SuperClass {
-        get replyPlaceholder() {
-          if (!canUpload) {
-            const richEditorEnabled =
-              this.siteSettings.rich_editor && this.currentUser?.useRichEditor;
-
-            const key = richEditorEnabled
-              ? "composer.reply_placeholder_rte_no_images"
-              : "composer.reply_placeholder_no_images";
-
-            return i18n(key);
-          }
-
-          return super.replyPlaceholder;
-        }
-      }
+  api.registerValueTransformer(
+    "composer-editor-reply-placeholder",
+    ({ value }) =>
+      !canUpload && noImagePlaceholders.has(value)
+        ? `${value}_no_images`
+        : value
   );
 
   api.addComposerUploadHandler(["*"], () => {
