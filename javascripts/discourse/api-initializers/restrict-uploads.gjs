@@ -1,6 +1,6 @@
 import { apiInitializer } from "discourse/lib/api";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
