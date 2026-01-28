@@ -14,6 +14,7 @@ RSpec.describe "Restrict uploads" do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer_upload) { PageObjects::Components::ComposerUpload.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
 
   context "when restrict_to_trust_level is set to 1" do
     before do
@@ -36,11 +37,27 @@ RSpec.describe "Restrict uploads" do
       expect(placeholder_text).not_to include("images")
     end
 
+    it "shows dialog when trust level 0 user attempts to upload a file" do
+      sign_in(user_tl0)
+      topic_page.open_new_topic
+
+      attach_file("file-uploader", file_from_fixtures("logo.png", "images").path, make_visible: true)
+      expect(dialog).to be_open
+    end
+
     it "allows trust level 1 users to upload" do
       sign_in(user_tl1)
       topic_page.open_new_topic
 
       expect(composer_upload).to have_upload_button
+    end
+
+    it "allows trust level 1 user to upload file without restriction dialog" do
+      sign_in(user_tl1)
+      topic_page.open_new_topic
+
+      attach_file("file-uploader", file_from_fixtures("logo.png", "images").path, make_visible: true)
+      expect(dialog).to be_closed
     end
 
     it "allows trust level 2 users to upload" do
@@ -57,6 +74,15 @@ RSpec.describe "Restrict uploads" do
 
       expect(composer_upload).to have_upload_button
     end
+
+    it "allows staff to upload file without restriction dialog even at low trust level" do
+      admin.update!(trust_level: 0)
+      sign_in(admin)
+      topic_page.open_new_topic
+
+      attach_file("file-uploader", file_from_fixtures("logo.png", "images").path, make_visible: true)
+      expect(dialog).to be_closed
+    end
   end
 
   context "when restrict_to_trust_level is set to 2" do
@@ -70,6 +96,14 @@ RSpec.describe "Restrict uploads" do
       topic_page.open_new_topic
 
       expect(composer_upload).to have_no_upload_button
+    end
+
+    it "shows dialog with correct trust level when trust level 1 user attempts to upload" do
+      sign_in(user_tl1)
+      topic_page.open_new_topic
+
+      attach_file("file-uploader", file_from_fixtures("logo.png", "images").path, make_visible: true)
+      expect(dialog).to be_open
     end
 
     it "allows trust level 2 users to upload" do
@@ -91,6 +125,14 @@ RSpec.describe "Restrict uploads" do
       topic_page.visit_topic_and_open_composer(topic)
 
       expect(composer_upload).to have_no_upload_button
+    end
+
+    it "shows dialog when restricted user attempts to upload in reply" do
+      sign_in(user_tl0)
+      topic_page.visit_topic_and_open_composer(topic)
+
+      attach_file("file-uploader", file_from_fixtures("logo.png", "images").path, make_visible: true)
+      expect(dialog).to be_open
     end
 
     it "allows permitted users to upload in replies" do

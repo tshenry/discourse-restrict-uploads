@@ -1,0 +1,5 @@
+en:
+  theme_metadata:
+    description: ""
+
+  restricted_upload: "You must be at trust level %{trust_level} or higher to upload files."

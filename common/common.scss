@@ -1,0 +1,6 @@
+html.cannot-upload-files {
+  .d-editor-button-bar button.upload,
+  .chat-composer-dropdown__item button.chat-upload-btn {
+    display: none;
+  }
+}
