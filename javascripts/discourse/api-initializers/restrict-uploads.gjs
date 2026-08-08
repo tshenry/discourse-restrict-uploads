@@ -2,7 +2,6 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { apiInitializer } from "discourse/lib/api";
-import { AUTO_GROUPS } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
 
 export default apiInitializer((api) => {
@@ -10,16 +9,7 @@ export default apiInitializer((api) => {
   const siteSettings = api.container.lookup("service:site-settings");
   const hasChat = siteSettings.chat_enabled && currentUser?.has_chat_enabled;
 
-  const currentUserGroupIds =
-    currentUser?.groups?.map((group) => group.id) ?? [];
-  const allowedGroupIds =
-    settings.restricted_to_groups?.split("|").map(Number) || [];
-
-  const canUpload = allowedGroupIds.some(
-    (groupId) =>
-      currentUserGroupIds.includes(groupId) ||
-      groupId === AUTO_GROUPS.everyone.id
-  );
+  const canUpload = settings.user_in_restricted_to_groups;
 
   if (!canUpload) {
     document.documentElement.classList.add("cannot-upload-files");

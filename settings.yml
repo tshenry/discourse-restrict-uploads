@@ -1,4 +1,6 @@
 restricted_to_groups:
   type: list
   list_type: group
-  default: "3|10"
+  default: "3|10" #staff, trust_level_0
+  disallowed_groups: "0|4" #everyone, anonymous_users
+  resolve_group_membership: true
