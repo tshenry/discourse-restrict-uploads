@@ -138,6 +138,20 @@ RSpec.describe "Restrict uploads" do
     end
   end
 
+  context "when restricted_to_groups is set to logged_in_users" do
+    before do
+      theme.update_setting(:restricted_to_groups, "5")
+      theme.save!
+    end
+
+    it "allows trust level 0 users to upload" do
+      sign_in(user_tl0)
+      topic_page.open_new_topic
+
+      expect(composer_upload).to have_upload_button
+    end
+  end
+
   context "when replying to a topic" do
     before do
       theme.update_setting(:restricted_to_groups, "11")
