@@ -1,5 +1,6 @@
 en:
   theme_metadata:
-    description: ""
-
-  restricted_upload: "You must be at trust level %{trust_level} or higher to upload files."
+    description: "Restrict uploading files in the composer and chat to users of selected groups"
+    settings:
+      restricted_to_groups: "Uploads will be limited to users who are a member of at least one of the groups configured in this setting"
+  restricted_upload: "You are not allowed to upload files"

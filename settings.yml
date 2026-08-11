@@ -1,10 +1,6 @@
-restrict_to_trust_level:
-  type: enum
-  default: 0
-  choices:
-    - 1
-    - 2
-    - 3
-    - 4
-  description: 
-    en: 'Uploads will be limited to users at this trust level or higher. Staff are immune.'
+restricted_to_groups:
+  type: list
+  list_type: group
+  default: "3|10" #staff, trust_level_0
+  disallowed_groups: "0|4" #everyone, anonymous_users
+  resolve_group_membership: true

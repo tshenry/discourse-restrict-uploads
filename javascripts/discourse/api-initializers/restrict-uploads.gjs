@@ -2,16 +2,14 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { apiInitializer } from "discourse/lib/api";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
   const siteSettings = api.container.lookup("service:site-settings");
-  const minTrust = settings.restrict_to_trust_level;
-
   const hasChat = siteSettings.chat_enabled && currentUser?.has_chat_enabled;
-  const canUpload = currentUser?.trust_level >= minTrust || currentUser?.staff;
+
+  const canUpload = settings.user_in_restricted_to_groups;
 
   if (!canUpload) {
     document.documentElement.classList.add("cannot-upload-files");
@@ -31,11 +29,7 @@ export default apiInitializer((api) => {
   );
 
   function dialogUploadRestriction() {
-    this.dialog.alert(
-      i18n(themePrefix("restricted_upload"), {
-        trust_level: minTrust,
-      })
-    );
+    this.dialog.alert(i18n(themePrefix("restricted_upload")));
   }
 
   function overrideUppy(uppyUpload) {
